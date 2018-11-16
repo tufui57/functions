@@ -56,29 +56,45 @@ clean_speciesname <- function(spnames # vector of character
 
 makeTag_separate <- function(data, # vector of full species names 
                              genus_name, # genus name should be got rid of
-                             separate # syntax which separates genus and species names e.g. "_" between "Acaena_agnipila"
+                             separate = "_" # syntax which separates genus and species names e.g. "_" between "Acaena_agnipila"
 ){
-  ### Import species name codes
+    # Get species names from dataframe or vector
   spname <- grepl(genus_name, data) %>% data[.]
-  codes <- gsub(paste(genus_name, separate, sep = ""), "", spname) %>% 
-    gsub(paste("subsp.", separate, sep = ""), "", .) %>% 
-    gsub(paste("var.", separate, sep = ""), "", .) %>%     
-    gsub(paste("subsp", separate, sep = ""), "", .) %>% 
-    gsub(paste("var", separate, sep = ""), "", .)
   
+  if(separate == "\\."){
+    spname <- gsub("\\.", "_", spname) %>% 
+      gsub("var_", "var\\.", .)%>% 
+      gsub("subsp_", "subsp\\.", .)
+    separate <- "_"
+  }
+  
+  # Create species name codes ex. "ans" for "anserinifolia"
+  codes <- gsub(paste(genus_name, separate, sep = ""), "", spname) %>% 
+    # Sub-species
+    gsub(paste("subsp\\.", separate, sep = ""), "", .) %>% 
+    # Variant
+    gsub(paste("var\\.", separate, sep = ""), "", .) %>% 
+    # Form
+    gsub(paste("f\\.", separate, sep = ""), "", .)
+  
+  # Make dataframe of species name and codes
   spname <- (codes %>% substring(., 1, last = 3) %>% mutate(as_tibble(spname), tag = .))
   colnames(spname)[1] <- "X"
+  
+  # For sub-species, variant and form
   subsp <- codes %>% 
-    strsplit(., separate) %>% 
+    strsplit(., paste("\\", separate, sep="")) %>% 
     lapply(., function(x){
       ifelse(is.na(x[2]), "", x[2])
     }) %>% 
     substring(., 1, last = 3)
   
-  spname <- lapply(1:length(subsp), function(i){
-    paste(spname[i,"tag"], subsp[i], sep = "_")
-  }
-  ) %>% unlist %>% 
+  spname <- lapply(1:length(subsp), 
+                   function(i){
+                     paste(spname[i,"tag"], subsp[i], sep = "_")
+                     }
+                   ) %>% 
+    unlist %>% 
     gsub(paste(separate, "$", sep=""), "", .) %>% 
     mutate(spname, tag = .) 
   

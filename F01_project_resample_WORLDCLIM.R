@@ -2,8 +2,7 @@
 # Convert WORLDCLIM tiff to raster
 ############################################################################################################
 
-### Extract bioclim data
-# Import bioclim 2.5 min (5km) raster data
+# Import bioclim raster data
 files <- paste(path, 
                list.files(path),
                sep="\\"
@@ -15,9 +14,9 @@ if(files[grep("bil$", files)] %>% length != 0){
   bio <- lapply(files[grep("bil$", files)], raster)
   
   # Change names to match occurrence data columns
-nam <- sapply(sapply(files[grep("bil$", files)], strsplit, "\\\\|.bil"), "[[", 5)
-nam2 <- gsub("_411", "", gsub("bio", "bioclim", nam))
-names(bio) <- nam2
+  nam <- sapply(sapply(files[grep("bil$", files)], strsplit, "\\\\|.bil"), "[[", 5)
+  nam2 <- gsub("_411", "", gsub("bio", "bioclim", nam))
+  names(bio) <- nam2
 
 }else{
   # Import worldclim

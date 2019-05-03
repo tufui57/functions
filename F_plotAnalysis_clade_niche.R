@@ -48,9 +48,11 @@ plotAnalysis <- function(data,
       geom_text(aes_string(label = nodeNumbercol),
                 vjust = -0.5,
                 size = 5)
+
   }
-  
+
   return(myplot)
 }
+
 
 

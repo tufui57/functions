@@ -9,7 +9,8 @@ plotAnalysis <- function(data,
                          nodeNumbercol = NULL,
                          showStats = FALSE, # TRUE; Show p value and slope of linear model and colour points, FALSE; No stat values and black points
                          label.point = FALSE, # TRUE; Show labels above points
-                         cex = 10 # title and axis label size
+                         cex = 10, # title and axis label size
+                         label.text.size = 5 # text size of point names when label.point = TRUE
                          ){
   
   
@@ -47,7 +48,7 @@ plotAnalysis <- function(data,
       # text label for points
       geom_text(aes_string(label = nodeNumbercol),
                 vjust = -0.5,
-                size = 5)
+                size = label.text.size)
 
   }
 

@@ -6,9 +6,9 @@
 PCAplot <- function(background, # background or PCA score to plot
                     scores, # PCA score to plot
                     extent_x, extent_y, # extent to plot
-                    col # Colour of points
+                    col, # Colour of points
+                    text.size
                     ){
-  
   
   pMain <- ggplot() +
     # plot all NZ data points
@@ -21,7 +21,9 @@ PCAplot <- function(background, # background or PCA score to plot
     guides(colour = guide_legend(override.aes = list(size = 5, shape = 16, alpha = 0.7))) +
     # legend position inside plot
     theme(legend.justification = c(1, 1), legend.position = c(1, 1),
-          panel.background = element_rect(fill = 'gray96')
+          panel.background = element_rect(fill = 'gray96'),
+          axis.title = element_text(size = text.size),
+          axis.text = element_text(size = text.size)
     )
   
   return(pMain)
@@ -31,17 +33,17 @@ PCA_withHist <- function(scores,
                          spname, # character string for title
                          histColour, # colour of bars
                          pMain, # result object of PCAplot()
+                         text.size, 
                          save = TRUE
                          ){
   pTop <- ggplot(scores, aes(x = PC1)) +
     geom_histogram(data = scores, fill = histColour, alpha = 0.35) +
     xlim(extent_x) +
     xlab(expression(hot %<->% cold)) +
-    theme(axis.text.x = element_blank(),
-          axis.title.y = element_text(""),
+    theme(axis.text = element_text(size = text.size),
+          axis.title = element_text(size = text.size),
           axis.ticks.x = element_blank()
     ) +
-    ggtitle(paste("Environmental space of", spname)) +
     theme(panel.background = element_rect(fill = 'gray96')) +
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
           panel.background = element_blank(), axis.line = element_line(colour = "black"))
@@ -52,8 +54,9 @@ PCA_withHist <- function(scores,
     xlim(extent_y) +
     xlab(expression(dry %<->% wet)) +
     theme(axis.text.y = element_blank(),
-          axis.text.x = element_text(angle = 270),
-          axis.title.y = element_text(angle = 270),
+          axis.text.x = element_text(angle = 270, size = text.size),
+          axis.title.y = element_text(angle = 270, size = text.size),
+          axis.title.x = element_text(size = text.size),
           axis.ticks.y = element_blank()
     ) +
     coord_flip() +

@@ -6,14 +6,17 @@ calculateNodeAge <- function(tree){
   ### Distance between all combinations of tips
   distances <- dist.nodes(tree)
   
+  # Node ID of species, i.e., tips
+  tipNode <- 1:length(tree$tip.label)
+    
   # Calculate species ages
-  ages <- sapply(nodes[[1]], function(i){
+  ages <- sapply(tipNode, function(i){
     # Phylogenetic distance list has 0 (distance to themselves)
     (distances[,i] > 0) %>% distances[., i] %>% min
   }
   )
   
-  ages <- as_tibble(ages) %>% mutate(., spname = row.names(nodes))
+  ages <- as_tibble(ages) %>% mutate(., spname = tree$tip.label)
   
   # Calculate internal node ages
   nodeage <- cbind(rep(NA, length(branching.times(tree))), branching.times(tree))

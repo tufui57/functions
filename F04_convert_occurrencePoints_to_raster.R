@@ -2,14 +2,15 @@
 
 project_and_convert_occurrencePoints_to_raster <- function(data, # list object with occurrence data
                                                refWGS, # reference raster for coordinate system
-                                               val # Add raster value. This argument should be character string
+                                               val, # Add raster value. This argument should be character string
+                                               coordinateNames # 
 ){
     
   # Project coordinates from WGS84 to NZTM
-  nztm <- project(as.matrix(data[, c("lon", "lat")]), proj4string(refWGS)) %>% as.data.frame
+  nztm <- project(as.matrix(data[, coordinateNames]), proj4string(refWGS)) %>% as.data.frame
   # Set coordinates
-  points <- nztm[, c("lon", "lat")]
-  coordinates(points) <- nztm[, c("lon", "lat")]
+  points <- nztm[, coordinateNames]
+  coordinates(points) <- nztm[, coordinateNames]
   # Put values in point object
   
   if(val == "occurrence" ){
